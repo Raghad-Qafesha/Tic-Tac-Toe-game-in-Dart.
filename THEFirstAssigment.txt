@@ -1,0 +1,79 @@
+import 'dart:io';
+
+class TicTacToe {
+    List<String> board = List.generate(9, (index) => (index + 1).toString());
+    String player1 = 'X';
+    String player2 = 'Y';
+    String currentPlayer = 'X';
+    bool gameOver = false;
+
+    void printBoard() {
+        for (var i = 0; i < 9; i += 3) {
+            print('${board[i]} | ${board[i + 1]} | ${board[i + 2]}');
+            if (i < 6) print('---------');
+        }
+        print('\n');
+    }
+
+    bool makeMove(int position) {
+        if (position < 1 || position > 9 || board[position - 1] == 'X' || board[position - 1] == 'Y') {
+            print('Invalid move. Please choose a valid position.');
+            return false;
+        }
+
+        board[position - 1] = currentPlayer;
+        printBoard();
+
+        if (checkWin() || checkDraw()) {
+            print('Player $currentPlayer wins!');
+            gameOver = true;
+        } else {
+            currentPlayer = (currentPlayer == player1) ? player2 : player1;
+        }
+
+        return true;
+    }
+
+    bool checkWin() {
+        // تحقق من الفوز هنا
+        // يمكنك استخدام نفس الكود الذي كتبته في النموذج السابق للتحقق من الفوز.
+        return false;
+    }
+
+    bool checkDraw() {
+        return !board.contains((index) => (index + 1).toString());
+    }
+
+    void restartGame() {
+        board = List.generate(9, (index) => (index + 1).toString());
+        currentPlayer = player1;
+        gameOver = false;
+    }
+}
+
+void main() {
+    print('Welcome to Tic-Tac-Toe!');
+    var game = TicTacToe();
+
+    while (!game.gameOver) {
+        print('Player ${game.currentPlayer}, choose a position (1-9):');
+        var input = stdin.readLineSync();
+        var move = int.tryParse(input ?? '');
+
+        if (move != null) {
+            game.makeMove(move);
+        } else {
+            print('Invalid input. Please enter a valid number.');
+        }
+    }
+
+    print('Do you want to play again? (yes/no)');
+    var playAgain = stdin.readLineSync()?.toLowerCase() ?? '';
+
+    if (playAgain == 'yes') {
+        game.restartGame();
+        main();
+    } else {
+        print('Thanks for playing!');
+    }
+}
